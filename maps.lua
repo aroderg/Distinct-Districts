@@ -23,8 +23,8 @@ function maps.load.square(width, height)
         table.insert(map, {})
         for j=1,width do
             local toInsert = love.math.random()
-            if toInsert <= 0.7 then
-                table.insert(map[i], lootTable({80, 6, 0.5, 0.5, 0.5}))
+            if toInsert <= (1 - gameState.map.emptyCellFrequency) then
+                table.insert(map[i], lootTable(gameState.map.resourceWeights))
             else
                 table.insert(map[i], lootTable({[0] = 100}))
             end
@@ -32,7 +32,3 @@ function maps.load.square(width, height)
     end
     return map
 end
-
-MAPWIDTH = 15
-MAPHEIGHT = 5
-maps.square = maps.load.square(MAPWIDTH, MAPHEIGHT)
