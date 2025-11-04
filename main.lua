@@ -35,30 +35,35 @@ function love.draw()
         local mainUIChain = moonshine.chain(moonshine.effects.gaussianblur)
         mainUIChain.gaussianblur.sigma = 8
         love.graphics.setColor(1, 1, 1, 1)
-        mainUIChain.draw(function()
-            for i,v in ipairs(gameState.map) do
-                for j,w in ipairs(v) do
-                    --love.graphics.rectangle("line", 600 + 90 * j, 170 + 90 * i, 90, 90)
-                    love.graphics.setColor(cellColors[w])
-                    love.graphics.rectangle("fill", 630 + 90 * j, 200 + 90 * i, 30, 30)
-                end
-            end
-        end)
+        local GRID_SIZE = 800
+        local CELL_SIZE = GRID_SIZE / math.max(MAPWIDTH, MAPHEIGHT)
+        -- mainUIChain.draw(function()
+        --     for i,v in ipairs(gameState.map) do
+        --         for j,w in ipairs(v) do
+        --         local color = w ~= 0 and cellColors[w] or {1, 1, 1, 0}
+        --         --love.graphics.rectangle("line", 600 + 90 * j, 170 + 90 * i, 90, 90)
+        --         love.graphics.setColor(color)
+        --         love.graphics.rectangle("fill", (960 - CELL_SIZE * MAPWIDTH / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * MAPHEIGHT / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
+        --         end
+        --     end
+        -- end)
         for i,v in ipairs(gameState.map) do
-            for j,w in ipairs(v) do
-                love.graphics.setColor(cellColors[w])
-                love.graphics.rectangle("fill", 630 + 90 * j, 200 + 90 * i, 30, 30)
+            for j,w in ipairs(v) do 
+                local color = w == 0 and {1, 1, 1, 0} or cellColors[w]
+                love.graphics.setColor(color)
+                love.graphics.rectangle("fill", (960 - CELL_SIZE * MAPWIDTH / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * MAPHEIGHT / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
             end
         end
-        love.graphics.setColor(1, 1, 1, 1)
         for i,v in ipairs(gameState.map) do
             for j,w in ipairs(v) do
-                love.graphics.rectangle("line", 600 + 90 * j, 170 + 90 * i, 90, 90)
+                local color = w == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
+                love.graphics.setColor(color)
+                love.graphics.rectangle("line", (960 - CELL_SIZE * MAPWIDTH / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * MAPHEIGHT / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
             end
         end
     end
 end
 
 function love.update(dt)
-
+    
 end

@@ -22,10 +22,17 @@ function maps.load.square(width, height)
     for i=1,height do
         table.insert(map, {})
         for j=1,width do
-            table.insert(map[i], lootTable({90, 2.5, 2.5, 2.5, 2.5}))
+            local toInsert = love.math.random()
+            if toInsert <= 0.7 then
+                table.insert(map[i], lootTable({80, 6, 0.5, 0.5, 0.5}))
+            else
+                table.insert(map[i], lootTable({[0] = 100}))
+            end
         end
     end
     return map
 end
 
-maps.square = maps.load.square(4, 3)
+MAPWIDTH = 15
+MAPHEIGHT = 5
+maps.square = maps.load.square(MAPWIDTH, MAPHEIGHT)
