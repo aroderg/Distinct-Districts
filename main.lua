@@ -25,19 +25,21 @@ function love.draw()
             love.graphics.setFont(fonts.AfacadFlux60)
             mainUIChain.enable("gaussianblur")
             mainUIChain.gaussianblur.sigma = 4
-            if gameState.currentMapSelected ~= "square" then
+            if gameState.currentMapSelected ~= 1 then
                 love.graphics.printf("<", 625, 205, 80, "center")
-            elseif gameState.currentMapSelected ~= "eatenSquare" then
+            elseif gameState.currentMapSelected ~= 2 then
                 love.graphics.printf(">", 1215, 205, 80, "center")
             end
         end)
         love.graphics.printf("Select a map to start the game!", 0, 100, 1920, "center")
-        love.graphics.printf(gameState.currentMapSelected, 0, 200, 1920, "center")
+        love.graphics.setScissor(705, 205, 510, 80)
+        love.graphics.printf(gameState.availableMaps[gameState.currentMapSelected], 0, 200, 1920, "center")
+        love.graphics.setScissor()
         love.graphics.setLineWidth(4)
-        if gameState.currentMapSelected ~= "square" then
+        if gameState.currentMapSelected ~= 1 then
             love.graphics.rectangle("line", 625, 205, 80, 80, 6, 6)
             love.graphics.printf("<", 625, 205, 80, "center")
-        elseif gameState.currentMapSelected ~= "eatenSquare" then
+        elseif gameState.currentMapSelected ~= 2 then
             love.graphics.rectangle("line", 1215, 205, 80, 80, 6, 6)
             love.graphics.printf(">", 1215, 205, 80, "center")
         end
@@ -79,20 +81,31 @@ function love.draw()
 end
 
 function love.update(dt)
+    -- if gameState.animations.mapSelect < 0.4 then
+    --     gameState.animations.mapSelect = math.min(gameState.animations.mapSelect + dt, 0.4)
+    -- else
+    --     gameState.animations.mapSelect = 0.4
+    -- end
 end
 
 function love.mousepressed(x, y, button)
     if button == 1 then
         if gameState.screen == "mapSelection" then
-            if x >= 625 and y >= 205 and x <= 705 and y <= 285 and gameState.currentMapSelected == "eatenSquare" then
-                gameState.currentMapSelected = "square"
-            elseif x >= 1215 and y >= 205 and x <= 1295 and y <= 285 and gameState.currentMapSelected == "square" then
-                gameState.currentMapSelected = "eatenSquare"
+            if x >= 625 and y >= 205 and x <= 705 and y <= 285 and gameState.currentMapSelected == 2 then
+                gameState.currentMapSelected = 1
+                gameState.animations.mapSelect = 0
+                gameState.animations.mapSelectDirection = 1
+            elseif x >= 1215 and y >= 205 and x <= 1295 and y <= 285 and gameState.currentMapSelected == 1 then
+                gameState.currentMapSelected = 2
+                gameState.animations.mapSelect = 0
+                gameState.animations.mapSelectDirection = -1
             elseif x >= 860 and y >= 360 and x <= 1060 and y <= 440 then
                 gameState.screen = "game"
                 maps.square = maps.load.square(gameState.map.width, gameState.map.height)
+                local mapToLoad = gameState.availableMaps[gameState.currentMapSelected]
+                maps.square = maps.load.square(gameState.map.width, gameState.map.height)
                 maps.eatenSquare = maps.load.eatenSquare(gameState.map.width, gameState.map.height)
-                gameState.map.type = maps[gameState.currentMapSelected]
+                gameState.map.type = maps[mapToLoad]
             end
         end
     end

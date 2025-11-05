@@ -1,9 +1,11 @@
 function loadGameState()
     gameState = {}
     gameState.screen = "mapSelection"
+    gameState.currentMapSelected = 1
+    gameState.availableMaps = {"square", "eatenSquare"}
     gameState.animations = {}
-    gameState.animations.mapSelect = 0
-    gameState.currentMapSelected = "square"
+    gameState.animations.mapSelect = 0.4
+    gameState.animations.mapSelectDirection = 1
     gameState.map = {}
     gameState.map.width = 15
     gameState.map.height = 15
