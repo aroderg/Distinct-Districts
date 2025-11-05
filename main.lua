@@ -25,16 +25,22 @@ function love.draw()
             love.graphics.setFont(fonts.AfacadFlux60)
             mainUIChain.enable("gaussianblur")
             mainUIChain.gaussianblur.sigma = 4
-            love.graphics.printf("<", 625, 205, 80, "center")
-            love.graphics.printf(">", 1215, 205, 80, "center")
+            if gameState.currentMapSelected ~= "square" then
+                love.graphics.printf("<", 625, 205, 80, "center")
+            elseif gameState.currentMapSelected ~= "eatenSquare" then
+                love.graphics.printf(">", 1215, 205, 80, "center")
+            end
         end)
         love.graphics.printf("Select a map to start the game!", 0, 100, 1920, "center")
         love.graphics.printf(gameState.currentMapSelected, 0, 200, 1920, "center")
         love.graphics.setLineWidth(4)
-        love.graphics.rectangle("line", 625, 205, 80, 80, 6, 6)
-        love.graphics.rectangle("line", 1215, 205, 80, 80, 6, 6)
-        love.graphics.printf("<", 625, 205, 80, "center")
-        love.graphics.printf(">", 1215, 205, 80, "center")
+        if gameState.currentMapSelected ~= "square" then
+            love.graphics.rectangle("line", 625, 205, 80, 80, 6, 6)
+            love.graphics.printf("<", 625, 205, 80, "center")
+        elseif gameState.currentMapSelected ~= "eatenSquare" then
+            love.graphics.rectangle("line", 1215, 205, 80, 80, 6, 6)
+            love.graphics.printf(">", 1215, 205, 80, "center")
+        end
         love.graphics.rectangle("line", 860, 360, 200, 80, 6, 6)
         love.graphics.printf("Done", 860, 358, 200, "center")
     else
