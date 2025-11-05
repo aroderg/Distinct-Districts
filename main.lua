@@ -11,8 +11,6 @@ function love.load()
         {0.5, 1, 0, 1}, --lime
     }
     loadGameState()
-    maps.square = maps.load.square(gameState.map.width, gameState.map.height)
-    gameState.map.type = maps[gameState.currentMapSelected]
     player = {}
     player.resources = {}
     fonts = {}
@@ -37,6 +35,8 @@ function love.draw()
         love.graphics.rectangle("line", 1215, 205, 80, 80, 6, 6)
         love.graphics.printf("<", 625, 205, 80, "center")
         love.graphics.printf(">", 1215, 205, 80, "center")
+        love.graphics.rectangle("line", 860, 360, 200, 80, 6, 6)
+        love.graphics.printf("Done", 860, 358, 200, "center")
     else
         love.graphics.setLineWidth(1)
         love.graphics.setLineStyle("rough")
@@ -82,6 +82,11 @@ function love.mousepressed(x, y, button)
                 gameState.currentMapSelected = "square"
             elseif x >= 1215 and y >= 205 and x <= 1295 and y <= 285 and gameState.currentMapSelected == "square" then
                 gameState.currentMapSelected = "eatenSquare"
+            elseif x >= 860 and y >= 360 and x <= 1060 and y <= 440 then
+                gameState.screen = "game"
+                maps.square = maps.load.square(gameState.map.width, gameState.map.height)
+                maps.eatenSquare = maps.load.eatenSquare(gameState.map.width, gameState.map.height)
+                gameState.map.type = maps[gameState.currentMapSelected]
             end
         end
     end

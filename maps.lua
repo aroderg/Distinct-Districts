@@ -18,6 +18,28 @@ function lootTable(weights)
 end
 
 function maps.load.square(width, height)
+    gameState.map = {}
+    gameState.map.width = 15
+    gameState.map.height = 15
+    gameState.map.emptyCellFrequency = 0.5
+    gameState.map.resourceWeights = {80, 6, 0.5, 0.5, 0.5}
+    local map = {}
+    for i=1,height do
+        table.insert(map, {})
+        for j=1,width do
+            table.insert(map[i], lootTable(gameState.map.resourceWeights))
+        end
+    end
+    return map
+end
+
+function maps.load.eatenSquare(width, height)
+    gameState.map = {}
+    gameState.map.width = 15
+    gameState.map.height = 15
+    gameState.map.emptyCellFrequency = 0.5
+    gameState.map.resourceWeights = {80, 6, 0.5, 0.5, 0.5}
+    gameState.map.emptyCellFrequency = 0.5
     local map = {}
     for i=1,height do
         table.insert(map, {})
