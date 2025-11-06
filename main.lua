@@ -15,6 +15,8 @@ function love.load()
     player.resources = {}
     fonts = {}
     fonts.AfacadFlux60 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Regular.ttf", 60)
+    fonts.AfacadFluxBold32 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 32)
+    fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
 end
 
 function love.draw()
@@ -76,6 +78,20 @@ function love.draw()
                 love.graphics.setColor(borderColor)
                 love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
             end
+        end
+        love.graphics.setLineWidth(2)
+        love.graphics.setLineStyle("smooth")
+        love.graphics.rectangle("line", -10, -10, 220, 400, 9, 9)
+        love.graphics.setFont(fonts.AfacadFluxBold32)
+        love.graphics.printf("Resources", 0, 0, 210, "center")
+        local resourceProcessed = 1
+        for i,v in pairs(gameState.resources) do
+            love.graphics.setColor(cellColors[resourceProcessed + 1])
+            love.graphics.rectangle("fill", 10, 15 + resourceProcessed * 30, 20, 20)
+            love.graphics.setColor(1, 1, 1, 1)
+            love.graphics.setFont(fonts.AfacadFluxBold20)
+            love.graphics.print(v, 40, 11 + resourceProcessed * 30)
+            resourceProcessed = resourceProcessed + 1
         end
     end
 end
