@@ -81,6 +81,7 @@ function love.draw()
         end
         love.graphics.setLineWidth(2)
         love.graphics.setLineStyle("smooth")
+        love.graphics.setColor(1, 1, 1, 1)
         love.graphics.rectangle("line", -10, -10, 220, 400, 9, 9)
         love.graphics.setFont(fonts.AfacadFluxBold32)
         love.graphics.printf("Resources", 0, 0, 210, "center")
