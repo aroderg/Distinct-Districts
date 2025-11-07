@@ -15,4 +15,5 @@ function loadGameState()
     gameState.resources.orange = 0
     gameState.resources.yellow = 0
     gameState.resources.green = 0
+    gameState.miners = {}
 end

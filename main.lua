@@ -67,14 +67,14 @@ function love.draw()
         -- end)
         for i,v in ipairs(gameState.map.type) do
             for j,w in ipairs(v) do 
-                local cellColor = w == 0 and {1, 1, 1, 0} or cellColors[w]
+                local cellColor = w.resource == 0 and {1, 1, 1, 0} or cellColors[w.resource]
                 love.graphics.setColor(cellColor)
                 love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
             end
         end
         for i,v in ipairs(gameState.map.type) do
             for j,w in ipairs(v) do
-                local borderColor = w == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
+                local borderColor = w.resource == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
                 love.graphics.setColor(borderColor)
                 love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
             end
@@ -132,7 +132,7 @@ function love.mousepressed(x, y, button)
             for i,v in ipairs(gameState.map.type) do
                 for j,w in ipairs(v) do
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
-                        local cellRes = resNames[w - 1]
+                        local cellRes = resNames[w.resource - 1]
                         if cellRes then
                             gameState.resources[cellRes] = gameState.resources[cellRes] + 1
                         end

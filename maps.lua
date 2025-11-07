@@ -22,7 +22,9 @@ function maps.load.square(width, height)
     for i=1,height do
         table.insert(map, {})
         for j=1,width do
-            table.insert(map[i], lootTable(gameState.map.resourceWeights))
+            table.insert(map[i], {
+                resource = lootTable(gameState.map.resourceWeights)
+            })
         end
     end
     return map
