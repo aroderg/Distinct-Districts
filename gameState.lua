@@ -14,5 +14,5 @@ function loadGameState()
     gameState.resources.red = 0
     gameState.resources.orange = 0
     gameState.resources.yellow = 0
-    gameState.resources.greem = 0
+    gameState.resources.green = 0
 end

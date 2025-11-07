@@ -86,12 +86,13 @@ function love.draw()
         love.graphics.setFont(fonts.AfacadFluxBold32)
         love.graphics.printf("Resources", 0, 0, 210, "center")
         local resourceProcessed = 1
-        for i,v in pairs(gameState.resources) do
+        local resNames = {"red", "orange", "yellow", "green"}
+        for i,v in ipairs(resNames) do
             love.graphics.setColor(cellColors[resourceProcessed + 1])
             love.graphics.rectangle("fill", 10, 15 + resourceProcessed * 30, 20, 20)
             love.graphics.setColor(1, 1, 1, 1)
             love.graphics.setFont(fonts.AfacadFluxBold20)
-            love.graphics.print(v, 40, 11 + resourceProcessed * 30)
+            love.graphics.print(gameState.resources[v], 40, 11 + resourceProcessed * 30)
             resourceProcessed = resourceProcessed + 1
         end
     end
@@ -123,6 +124,21 @@ function love.mousepressed(x, y, button)
                 maps.square = maps.load.square(gameState.map.width, gameState.map.height)
                 maps.eatenSquare = maps.load.eatenSquare(gameState.map.width, gameState.map.height)
                 gameState.map.type = maps[mapToLoad]
+            end
+        else
+            local GRID_SIZE = 800
+            local CELL_SIZE = GRID_SIZE / math.max(gameState.map.width, gameState.map.height)
+            local resNames = {"red", "orange", "yellow", "green"}
+            for i,v in ipairs(gameState.map.type) do
+                for j,w in ipairs(v) do
+                    if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
+                        local cellRes = resNames[w - 1]
+                        if cellRes then
+                            gameState.resources[cellRes] = gameState.resources[cellRes] + 1
+                        end
+                        return true
+                    end
+                end
             end
         end
     end
