@@ -4,4 +4,5 @@ function miners.create(coordinates, miningResource, miningSpeed)
     newMiner.coordinates = coordinates
     newMiner.resource = miningResource
     newMiner.miningQuantity = miningSpeed
+    return newMiner
 end

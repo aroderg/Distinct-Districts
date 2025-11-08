@@ -1,5 +1,6 @@
 moonshine = require "moonshine"
 gameState = require "gameState"
+miner = require "miner"
 map = require "maps"
 
 function love.load()
@@ -70,6 +71,9 @@ function love.draw()
                 local cellColor = w.resource == 0 and {1, 1, 1, 0} or cellColors[w.resource]
                 love.graphics.setColor(cellColor)
                 love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
+                local minerColor = w.miner and cellColors[w.miner.resource + 1] or {1, 1, 1, 0}
+                love.graphics.setColor(minerColor)
+                love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.2, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.2, CELL_SIZE * 0.6, CELL_SIZE * 0.6)
             end
         end
         for i,v in ipairs(gameState.map.type) do
@@ -119,7 +123,6 @@ function love.mousepressed(x, y, button)
                 gameState.animations.mapSelectDirection = -1
             elseif x >= 860 and y >= 360 and x <= 1060 and y <= 440 then
                 gameState.screen = "game"
-                maps.square = maps.load.square(gameState.map.width, gameState.map.height)
                 local mapToLoad = gameState.availableMaps[gameState.currentMapSelected]
                 maps.square = maps.load.square(gameState.map.width, gameState.map.height)
                 maps.eatenSquare = maps.load.eatenSquare(gameState.map.width, gameState.map.height)

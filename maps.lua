@@ -23,10 +23,11 @@ function maps.load.square(width, height)
         table.insert(map, {})
         for j=1,width do
             table.insert(map[i], {
-                resource = lootTable(gameState.map.resourceWeights)
+                resource = lootTable(gameState.map.resourceWeights),
             })
         end
     end
+    map[4][4].miner = miners.create({4, 4}, 1, 1)
     return map
 end
 
@@ -38,9 +39,21 @@ function maps.load.eatenSquare(width, height)
         for j=1,width do
             local toInsert = love.math.random()
             if toInsert <= (1 - gameState.map.emptyCellFrequency) then
-                table.insert(map[i], lootTable(gameState.map.resourceWeights))
+            table.insert(map[i], {
+                resource = lootTable(gameState.map.resourceWeights),
+            })
             else
-                table.insert(map[i], lootTable({[0] = 100}))
+                table.insert(map[i], {
+                resource = lootTable({[0] = 100}),
+            })
+            end
+        end
+    end
+    for i=1,height do
+        for j=1,width do
+            local minerInsert = love.math.random()
+            if minerInsert <= 0.03 then
+                map[i][j].miner = miners.create({i, j}, 1, 1)
             end
         end
     end
