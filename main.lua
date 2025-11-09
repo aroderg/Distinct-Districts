@@ -1,3 +1,4 @@
+require "technical"
 moonshine = require "moonshine"
 gameState = require "gameState"
 miner = require "miner"
@@ -67,10 +68,12 @@ function love.draw()
         --     end
         -- end)
         for i,v in ipairs(gameState.map.type) do
-            for j,w in ipairs(v) do 
-                local cellColor = w.resource == 0 and {1, 1, 1, 0} or cellColors[w.resource]
+            for j,w in ipairs(v) do
+                --local cellColor = technical.ternaryCondition(w.resource == 0 and w.visible, {1, 1, 1, 0}, cellColors[w.resource])
+                local cellColor = (w.resource == 0 or not w.visible) and {1, 1, 1, 0} or cellColors[w.resource]
                 love.graphics.setColor(cellColor)
-                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)            end
+                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
+            end
         end
         for i,v in ipairs(gameState.map.type) do
             for j,w in ipairs(v) do
@@ -114,7 +117,7 @@ function love.update(dt)
             if v.timer_mining >= 1 then
                 v.timer_mining = 0
                 local minerRes = resNames[v.resource]
-                gameState.resources[minerRes] = gameState.resources[minerRes] + 1
+                gameState.resources[minerRes] = gameState.resources[minerRes] + v.miningQuantity
             end
         end
     end
