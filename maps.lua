@@ -53,7 +53,7 @@ function maps.load.eatenSquare(width, height)
         for j=1,width do
             local minerInsert = love.math.random()
             if minerInsert <= 0.03 then
-                map[i][j].miner = miners.create({i, j}, 1, 1)
+                miners.create({i, j}, 1, 1)
             end
         end
     end

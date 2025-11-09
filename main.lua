@@ -70,11 +70,7 @@ function love.draw()
             for j,w in ipairs(v) do 
                 local cellColor = w.resource == 0 and {1, 1, 1, 0} or cellColors[w.resource]
                 love.graphics.setColor(cellColor)
-                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
-                local minerColor = w.miner and cellColors[w.miner.resource + 1] or {1, 1, 1, 0}
-                love.graphics.setColor(minerColor)
-                love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.2, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.2, CELL_SIZE * 0.6, CELL_SIZE * 0.6)
-            end
+                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)            end
         end
         for i,v in ipairs(gameState.map.type) do
             for j,w in ipairs(v) do
@@ -82,6 +78,11 @@ function love.draw()
                 love.graphics.setColor(borderColor)
                 love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
             end
+        end
+        for i,v in ipairs(cellMiners) do
+            local minerColor = cellColors[v.resource + 1]
+            love.graphics.setColor(minerColor)
+            love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (v.coordinates[1]- 1) + CELL_SIZE * 0.2, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (v.coordinates[2] - 1) + CELL_SIZE * 0.2, CELL_SIZE * 0.6, CELL_SIZE * 0.6)
         end
         love.graphics.setLineWidth(2)
         love.graphics.setLineStyle("smooth")
@@ -103,11 +104,20 @@ function love.draw()
 end
 
 function love.update(dt)
-    -- if gameState.animations.mapSelect < 0.4 then
-    --     gameState.animations.mapSelect = math.min(gameState.animations.mapSelect + dt, 0.4)
-    -- else
-    --     gameState.animations.mapSelect = 0.4
-    -- end
+    local resNames = {"red", "orange", "yellow", "green"}
+    if screen ~= "mapSelection" then
+        for i,v in ipairs(cellMiners) do
+            local minerPos = v.coordinates
+            if gameState.map.type[minerPos[1]][minerPos[2]].resource == 2 then
+                v.timer_mining = v.timer_mining + dt
+            end
+            if v.timer_mining >= 1 then
+                v.timer_mining = 0
+                local minerRes = resNames[v.resource]
+                gameState.resources[minerRes] = gameState.resources[minerRes] + 1
+            end
+        end
+    end
 end
 
 function love.mousepressed(x, y, button)
