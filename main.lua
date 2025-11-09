@@ -111,7 +111,7 @@ function love.update(dt)
     if screen ~= "mapSelection" then
         for i,v in ipairs(cellMiners) do
             local minerPos = v.coordinates
-            if gameState.map.type[minerPos[2]][minerPos[1]].resource == 2 then
+            if gameState.map.type[minerPos[2]][minerPos[1]].resource == v.resource + 1 then
                 v.timer_mining = v.timer_mining + dt
             end
             if v.timer_mining >= 1 then
@@ -148,9 +148,9 @@ function love.mousepressed(x, y, button)
             for i,v in ipairs(gameState.map.type) do
                 for j,w in ipairs(v) do
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
-                        if gameState.placingMiner then
-                            miners.create({j, i}, lootTable(gameState.map.resourceWeights), 4 * love.math.random())
-                        else
+                        if gameState.placingMiner and not miners.scan({j, i}) then
+                            miners.create({j, i}, lootTable(gameState.map.minerWeights), 4 * love.math.random())
+                        elseif not gameState.placingMiner then
                             local cellRes = resNames[w.resource - 1]
                             if cellRes then
                                 gameState.resources[cellRes] = gameState.resources[cellRes] + 1
