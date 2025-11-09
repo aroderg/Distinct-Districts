@@ -148,8 +148,9 @@ function love.mousepressed(x, y, button)
             for i,v in ipairs(gameState.map.type) do
                 for j,w in ipairs(v) do
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
-                        if gameState.placingMiner and not miners.scan({j, i}) then
-                            miners.create({j, i}, lootTable(gameState.map.minerWeights), 4 * love.math.random())
+                        if gameState.placingMiner and not miners.scan({j, i}) and gameState.resources.red >= 10 then
+                            gameState.resources.red = gameState.resources.red - 10
+                            miners.create({j, i}, w.resource - 1, 1)
                         elseif not gameState.placingMiner then
                             local cellRes = resNames[w.resource - 1]
                             if cellRes then
