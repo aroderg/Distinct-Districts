@@ -137,9 +137,8 @@ function love.mousepressed(x, y, button)
             elseif x >= 860 and y >= 360 and x <= 1060 and y <= 440 then
                 gameState.screen = "game"
                 local mapToLoad = gameState.availableMaps[gameState.currentMapSelected]
-                maps.square = maps.load.square(gameState.map.width, gameState.map.height)
-                maps.eatenSquare = maps.load.eatenSquare(gameState.map.width, gameState.map.height)
                 gameState.map.type = maps.load[mapToLoad](gameState.map.width, gameState.map.height)
+                maps.revealOneCell()
             end
         else
             local GRID_SIZE = 800
@@ -150,7 +149,8 @@ function love.mousepressed(x, y, button)
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
                         if gameState.placingMiner and not miners.scan({j, i}) and gameState.resources.red >= 10 then
                             gameState.resources.red = gameState.resources.red - 10
-                            miners.create({j, i}, w.resource - 1, 1)
+                            local resToAssignToMiner = (w.resource == 0 or w.resource == 1) and lootTable(gameState.map.minerWeights) or w.resource - 1
+                            miners.create({j, i}, resToAssignToMiner, 1)
                         elseif not gameState.placingMiner then
                             local cellRes = resNames[w.resource - 1]
                             if cellRes then

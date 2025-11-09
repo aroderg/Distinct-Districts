@@ -24,7 +24,7 @@ function maps.load.square(width, height)
         for j=1,width do
             table.insert(map[i], {
                 resource = lootTable(gameState.map.resourceWeights),
-                visible = true
+                visible = false
             })
         end
     end
@@ -41,7 +41,7 @@ function maps.load.eatenSquare(width, height)
             if toInsert <= (1 - gameState.map.emptyCellFrequency) then
             table.insert(map[i], {
                 resource = lootTable(gameState.map.resourceWeights),
-                visible = true
+                visible = false
             })
             else
                 table.insert(map[i], {
@@ -51,4 +51,21 @@ function maps.load.eatenSquare(width, height)
         end
     end
     return map
+end
+
+function maps.revealOneCell()
+    local NoOfResCells = 0
+    local resCellsLocations = {}
+    for i,v in ipairs(gameState.map.type) do
+        for j,w in ipairs(v) do
+            if w.resource == 2 then
+                NoOfResCells = NoOfResCells + 1
+                table.insert(resCellsLocations, {j, i})
+            end
+        end
+    end
+    local cellToReveal = love.math.random(1, NoOfResCells)
+    local cellToReveal_pos = resCellsLocations[cellToReveal]
+    gameState.map.type[cellToReveal_pos[2]][cellToReveal_pos[1]].visible = true
+    return true
 end
