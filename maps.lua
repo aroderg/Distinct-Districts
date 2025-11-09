@@ -24,19 +24,10 @@ function maps.load.square(width, height)
         for j=1,width do
             table.insert(map[i], {
                 resource = lootTable(gameState.map.resourceWeights),
-                visible = false
+                visible = true
             })
         end
     end
-    miners.create({4, 4}, 1, 3)
-    -- for i=1,height do
-    --     for j=1,width do
-    --         local minerInsert = love.math.random()
-    --         if minerInsert <= 0.03 then
-    --             miners.create({i, j}, 1, 3)
-    --         end
-    --     end
-    -- end
     return map
 end
 
@@ -50,7 +41,7 @@ function maps.load.eatenSquare(width, height)
             if toInsert <= (1 - gameState.map.emptyCellFrequency) then
             table.insert(map[i], {
                 resource = lootTable(gameState.map.resourceWeights),
-                visible = false
+                visible = true
             })
             else
                 table.insert(map[i], {
@@ -59,14 +50,5 @@ function maps.load.eatenSquare(width, height)
             end
         end
     end
-    -- for i=1,height do
-    --     for j=1,width do
-    --         local minerInsert = love.math.random()
-    --         if minerInsert <= 0.03 then
-    --             miners.create({i, j}, 1, 3)
-    --         end
-    --     end
-    -- end
-
     return map
 end

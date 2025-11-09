@@ -111,7 +111,7 @@ function love.update(dt)
     if screen ~= "mapSelection" then
         for i,v in ipairs(cellMiners) do
             local minerPos = v.coordinates
-            if gameState.map.type[minerPos[1]][minerPos[2]].resource == 2 then
+            if gameState.map.type[minerPos[2]][minerPos[1]].resource == 2 then
                 v.timer_mining = v.timer_mining + dt
             end
             if v.timer_mining >= 1 then
@@ -139,7 +139,7 @@ function love.mousepressed(x, y, button)
                 local mapToLoad = gameState.availableMaps[gameState.currentMapSelected]
                 maps.square = maps.load.square(gameState.map.width, gameState.map.height)
                 maps.eatenSquare = maps.load.eatenSquare(gameState.map.width, gameState.map.height)
-                gameState.map.type = maps[mapToLoad]
+                gameState.map.type = maps.load[mapToLoad](gameState.map.width, gameState.map.height)
             end
         else
             local GRID_SIZE = 800
@@ -148,14 +148,26 @@ function love.mousepressed(x, y, button)
             for i,v in ipairs(gameState.map.type) do
                 for j,w in ipairs(v) do
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
-                        local cellRes = resNames[w.resource - 1]
-                        if cellRes then
-                            gameState.resources[cellRes] = gameState.resources[cellRes] + 1
+                        if gameState.placingMiner then
+                            miners.create({j, i}, lootTable(gameState.map.resourceWeights), 4 * love.math.random())
+                        else
+                            local cellRes = resNames[w.resource - 1]
+                            if cellRes then
+                                gameState.resources[cellRes] = gameState.resources[cellRes] + 1
+                            end
                         end
                         return true
                     end
                 end
             end
+        end
+    end
+end
+
+function love.keypressed(key)
+    if gameState.screen ~= "mapSelection" then
+        if key == "p" then
+            gameState.placingMiner = not gameState.placingMiner
         end
     end
 end

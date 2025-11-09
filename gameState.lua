@@ -9,11 +9,11 @@ function loadGameState()
     gameState.map = {}
     gameState.map.width = 15
     gameState.map.height = 15
-    gameState.map.resourceWeights = {80, 60, 0.5, 0.5, 0.5}
+    gameState.map.resourceWeights = {80, 6, 0.5, 0.5, 0.5}
     gameState.resources = {}
     gameState.resources.red = 0
     gameState.resources.orange = 0
     gameState.resources.yellow = 0
     gameState.resources.green = 0
-    gameState.miners = {}
+    gameState.placingMiner = false
 end
