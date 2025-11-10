@@ -1,8 +1,9 @@
-require "technical"
+
 moonshine = require "moonshine"
-gameState = require "gameState"
-miner = require "miner"
-map = require "maps"
+require "gameState"
+require "miner"
+require "maps"
+require "district"
 
 function love.load()
     cellColors = {
@@ -19,6 +20,7 @@ function love.load()
     fonts.AfacadFlux60 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Regular.ttf", 60)
     fonts.AfacadFluxBold32 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 32)
     fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
+    districts.create("testD", {0, 1, 0.5, 0.25})
 end
 
 function love.draw()
@@ -69,17 +71,19 @@ function love.draw()
         -- end)
         for i,v in ipairs(gameState.map.type) do
             for j,w in ipairs(v) do
-                --local cellColor = technical.ternaryCondition(w.resource == 0 and w.visible, {1, 1, 1, 0}, cellColors[w.resource])
-                local cellColor = (w.resource == 0 or not w.visible) and {1, 1, 1, 0} or cellColors[w.resource]
+                local visibilityOverride = w.visible or gameState.allVisible
+                local cellColor = (w.resource == 0 or not visibilityOverride) and {1, 1, 1, 0} or cellColors[w.resource]
                 love.graphics.setColor(cellColor)
                 love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
-            end
-        end
-        for i,v in ipairs(gameState.map.type) do
-            for j,w in ipairs(v) do
                 local borderColor = w.resource == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
                 love.graphics.setColor(borderColor)
-                love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
+                love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)            end
+        end
+        for i,v in pairs(storedDistricts) do
+            for j,w in ipairs(v.cellsOccupied) do
+                local districtColor = storedDistricts.testD.color
+                love.graphics.setColor(districtColor)
+                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (w[1] - 1) + 1, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (w[2] - 1) + 1, CELL_SIZE - 2, CELL_SIZE - 2)
             end
         end
         for i,v in ipairs(cellMiners) do
@@ -150,8 +154,11 @@ function love.mousepressed(x, y, button)
                         if gameState.placingMiner and not miners.scan({j, i}) and gameState.resources.red >= 10 then
                             gameState.resources.red = gameState.resources.red - 10
                             local resToAssignToMiner = (w.resource == 0 or w.resource == 1) and lootTable(gameState.map.minerWeights) or w.resource - 1
+                            gameState.map.type[i][j].visible = true
                             miners.create({j, i}, resToAssignToMiner, 1)
-                        elseif not gameState.placingMiner then
+                        elseif gameState.districtExpansion and not districts.scan({j, i}) then
+                            districts.expand(storedDistricts.testD, {j, i})
+                        elseif not gameState.placingMiner and not gameState.districtExpansion then
                             local cellRes = resNames[w.resource - 1]
                             if cellRes then
                                 gameState.resources[cellRes] = gameState.resources[cellRes] + 1
@@ -169,6 +176,14 @@ function love.keypressed(key)
     if gameState.screen ~= "mapSelection" then
         if key == "p" then
             gameState.placingMiner = not gameState.placingMiner
+            gameState.districtExpansion = false
+        elseif key == "v" then
+            gameState.allVisible = not gameState.allVisible
+            gameState.placingMiner = false
+            gameState.districtExpansion = false
+        elseif key == "d" then
+            gameState.districtExpansion = not gameState.districtExpansion
+            gameState.placingMiner = false
         end
     end
 end

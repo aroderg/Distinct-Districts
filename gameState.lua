@@ -17,4 +17,6 @@ function loadGameState()
     gameState.resources.yellow = 0
     gameState.resources.green = 0
     gameState.placingMiner = false
+    gameState.allVisible = false
+    gameState.districtExpansion = false
 end
