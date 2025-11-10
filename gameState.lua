@@ -12,7 +12,7 @@ function loadGameState()
     gameState.map.resourceWeights = {80, 6, 0.5, 0.5, 0.5}
     gameState.map.minerWeights = {6, 0.5, 0.5, 0.5}
     gameState.resources = {}
-    gameState.resources.red = 10
+    gameState.resources.red = 12
     gameState.resources.orange = 0
     gameState.resources.yellow = 0
     gameState.resources.green = 0

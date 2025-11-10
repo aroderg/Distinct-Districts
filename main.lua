@@ -69,22 +69,22 @@ function love.draw()
         --         end
         --     end
         -- end)
+        for i,v in pairs(storedDistricts) do
+            for j,w in ipairs(v.cellsOccupied) do
+                local districtColor = storedDistricts.testD.color
+                love.graphics.setColor(districtColor)
+                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (w[1] - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (w[2] - 1), CELL_SIZE, CELL_SIZE)
+            end
+        end
         for i,v in ipairs(gameState.map.type) do
             for j,w in ipairs(v) do
                 local visibilityOverride = w.visible or gameState.allVisible
-                local cellColor = (w.resource == 0 or not visibilityOverride) and {1, 1, 1, 0} or cellColors[w.resource]
+                local cellColor = (w.resource == 0 or w.resource == 1 or not visibilityOverride) and {1, 1, 1, 0} or cellColors[w.resource]
                 love.graphics.setColor(cellColor)
                 love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
                 local borderColor = w.resource == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
                 love.graphics.setColor(borderColor)
                 love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)            end
-        end
-        for i,v in pairs(storedDistricts) do
-            for j,w in ipairs(v.cellsOccupied) do
-                local districtColor = storedDistricts.testD.color
-                love.graphics.setColor(districtColor)
-                love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (w[1] - 1) + 1, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (w[2] - 1) + 1, CELL_SIZE - 2, CELL_SIZE - 2)
-            end
         end
         for i,v in ipairs(cellMiners) do
             local minerColor = cellColors[v.resource + 1]
@@ -151,13 +151,15 @@ function love.mousepressed(x, y, button)
             for i,v in ipairs(gameState.map.type) do
                 for j,w in ipairs(v) do
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
-                        if gameState.placingMiner and not miners.scan({j, i}) and gameState.resources.red >= 10 then
+                        if gameState.placingMiner and not miners.scan({j, i}) and districts.scan({j, i}) and gameState.resources.red >= 10 then
                             gameState.resources.red = gameState.resources.red - 10
                             local resToAssignToMiner = (w.resource == 0 or w.resource == 1) and lootTable(gameState.map.minerWeights) or w.resource - 1
                             gameState.map.type[i][j].visible = true
                             miners.create({j, i}, resToAssignToMiner, 1)
                         elseif gameState.districtExpansion and not districts.scan({j, i}) then
+                            gameState.resources.red = gameState.resources.red - 2
                             districts.expand(storedDistricts.testD, {j, i})
+                            gameState.map.type[i][j].visible = true
                         elseif not gameState.placingMiner and not gameState.districtExpansion then
                             local cellRes = resNames[w.resource - 1]
                             if cellRes then
