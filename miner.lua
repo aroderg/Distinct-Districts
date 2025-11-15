@@ -1,5 +1,11 @@
 miners = {}
 cellMiners = {}
+miners.costs = {}
+local minerCost = 10
+for i=1,100 do
+    table.insert(miners.costs, minerCost)
+    minerCost = minerCost * 2
+end
 function miners.create(coordinates, miningResource, miningSpeed)
     local newMiner = {}
     newMiner.coordinates = coordinates

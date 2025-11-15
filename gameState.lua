@@ -7,9 +7,9 @@ function loadGameState()
     gameState.animations.mapSelect = 0.4
     gameState.animations.mapSelectDirection = 1
     gameState.map = {}
-    gameState.map.width = 15
-    gameState.map.height = 15
-    gameState.map.resourceWeights = {80, 6, 0.5, 0.5, 0.5}
+    gameState.map.width = 60
+    gameState.map.height = 60
+    gameState.map.resourceWeights = {50, 6, 0.5, 0.5, 0.5}
     gameState.map.minerWeights = {6, 0.5, 0.5, 0.5}
     gameState.resources = {}
     gameState.resources.red = 12
