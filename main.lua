@@ -4,6 +4,7 @@ require "gameState"
 require "miner"
 require "maps"
 require "district"
+require "debugInfo"
 
 function love.load()
     cellColors = {
@@ -21,6 +22,7 @@ function love.load()
     fonts.AfacadFluxBold32 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 32)
     fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
     districts.create("testD", {0, 1, 0.5, 0.25})
+    districts.reloadCosts()
 end
 
 function love.draw()
@@ -108,6 +110,7 @@ function love.draw()
             resourceProcessed = resourceProcessed + 1
         end
     end
+    debugInfo.show()
 end
 
 function love.update(dt)
@@ -151,13 +154,13 @@ function love.mousepressed(x, y, button)
             for i,v in ipairs(gameState.map.type) do
                 for j,w in ipairs(v) do
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
-                        if gameState.placingMiner and not miners.scan({j, i}) and districts.scan({j, i}) and gameState.resources.red >= 10 then
-                            gameState.resources.red = gameState.resources.red - 10
+                        if gameState.placingMiner and not miners.scan({j, i}) and districts.scan({j, i}) and gameState.resources.red >= miners.costs[#cellMiners + 1] then
+                            gameState.resources.red = gameState.resources.red - miners.costs[#cellMiners + 1]
                             local resToAssignToMiner = (w.resource == 0 or w.resource == 1) and lootTable(gameState.map.minerWeights) or w.resource - 1
                             gameState.map.type[i][j].visible = true
                             miners.create({j, i}, resToAssignToMiner, 1)
-                        elseif gameState.districtExpansion and not districts.scan({j, i}) then
-                            gameState.resources.red = gameState.resources.red - 2
+                        elseif gameState.districtExpansion and not districts.scan({j, i}) and gameState.resources.red >= districts.costs[districts.calculateCells() + 1] then
+                            gameState.resources.red = gameState.resources.red - districts.costs[districts.calculateCells() + 1]
                             districts.expand(storedDistricts.testD, {j, i})
                             gameState.map.type[i][j].visible = true
                         elseif not gameState.placingMiner and not gameState.districtExpansion then
