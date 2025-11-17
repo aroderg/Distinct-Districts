@@ -5,6 +5,7 @@ require "miner"
 require "maps"
 require "district"
 require "debugInfo"
+require "tooltips"
 
 function love.load()
     cellColors = {
@@ -109,6 +110,7 @@ function love.draw()
             love.graphics.print(gameState.resources[v], 40, 11 + resourceProcessed * 30)
             resourceProcessed = resourceProcessed + 1
         end
+        cellTooltips()
     end
     debugInfo.show()
 end
@@ -163,11 +165,6 @@ function love.mousepressed(x, y, button)
                             gameState.resources.red = gameState.resources.red - districts.costs[districts.calculateCells() + 1]
                             districts.expand(storedDistricts.testD, {j, i})
                             gameState.map.type[i][j].visible = true
-                        elseif not gameState.placingMiner and not gameState.districtExpansion then
-                            local cellRes = resNames[w.resource - 1]
-                            if cellRes then
-                                gameState.resources[cellRes] = gameState.resources[cellRes] + 1
-                            end
                         end
                         return true
                     end
