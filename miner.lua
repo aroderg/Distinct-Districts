@@ -2,6 +2,7 @@ miners = {}
 cellMiners = {}
 miners.costs = {}
 local minerCost = 10
+table.insert(miners.costs, 0)
 for i=1,100 do
     table.insert(miners.costs, minerCost)
     minerCost = minerCost * 2

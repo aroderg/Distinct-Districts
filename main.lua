@@ -22,6 +22,7 @@ function love.load()
     fonts.AfacadFlux60 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Regular.ttf", 60)
     fonts.AfacadFluxBold32 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 32)
     fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
+    fonts.Vera12 = love.graphics.newFont("fonts/Vera/Vera.ttf", 12)
     districts.create("testD", {0, 1, 0.5, 0.25})
     districts.reloadCosts()
 end
@@ -111,8 +112,8 @@ function love.draw()
             resourceProcessed = resourceProcessed + 1
         end
         cellTooltips()
+        debugInfo.show()
     end
-    debugInfo.show()
 end
 
 function love.update(dt)
@@ -185,6 +186,7 @@ function love.keypressed(key)
             gameState.districtExpansion = false
         elseif key == "d" then
             gameState.districtExpansion = not gameState.districtExpansion
+            gameState.districtToExpand = gameState.districtExpansion and "testD" or nil
             gameState.placingMiner = false
         end
     end

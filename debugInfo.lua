@@ -1,6 +1,7 @@
 debugInfo = {}
 function debugInfo.show()
     love.graphics.setFont(fonts.AfacadFluxBold20)
+    love.graphics.setColor(1, 1, 1, 1)
     local entryNames = {"next district cost", "next miner cost"}
     local valueNames = {districts.costs[districts.calculateCells() + 1], miners.costs[#cellMiners + 1]}
     for i=1,2 do

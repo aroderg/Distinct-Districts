@@ -4,7 +4,7 @@ cellDistricts = {}
 function districts.reloadCosts()
     districts.costs = {}
     for i=1,gameState.map.width*gameState.map.height do
-        table.insert(districts.costs, i + 1)
+        table.insert(districts.costs, i +3)
     end
 end
 function districts.create(name, color)
