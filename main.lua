@@ -24,6 +24,8 @@ function love.load()
     fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
     fonts.Vera12 = love.graphics.newFont("fonts/Vera/Vera.ttf", 12)
     districts.create("testD", {0, 1, 0.5, 0.25})
+    districts.create("testD2", {0, 1, 1, 0.25})
+    districts.create("testD3", {0.5, 0, 1, 0.25})
     districts.reloadCosts()
 end
 
@@ -75,7 +77,7 @@ function love.draw()
         -- end)
         for i,v in pairs(storedDistricts) do
             for j,w in ipairs(v.cellsOccupied) do
-                local districtColor = storedDistricts.testD.color
+                local districtColor = v.color or {1, 1, 1, 1}
                 love.graphics.setColor(districtColor)
                 love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (w[1] - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (w[2] - 1), CELL_SIZE, CELL_SIZE)
             end
@@ -164,7 +166,7 @@ function love.mousepressed(x, y, button)
                             miners.create({j, i}, resToAssignToMiner, 1)
                         elseif gameState.districtExpansion and not districts.scan({j, i}) and gameState.resources.red >= districts.costs[districts.calculateCells() + 1] then
                             gameState.resources.red = gameState.resources.red - districts.costs[districts.calculateCells() + 1]
-                            districts.expand(storedDistricts.testD, {j, i})
+                            districts.expand(storedDistricts[gameState.districtToExpand.name], {j, i})
                             gameState.map.type[i][j].visible = true
                         end
                         return true
@@ -186,8 +188,12 @@ function love.keypressed(key)
             gameState.districtExpansion = false
         elseif key == "d" then
             gameState.districtExpansion = not gameState.districtExpansion
-            gameState.districtToExpand = gameState.districtExpansion and "testD" or nil
+            gameState.districtToExpand = gameState.districtExpansion and {name = gameState.districtNames[1], index = 1} or {name = "testD", index = 1}
             gameState.placingMiner = false
+        elseif key == "right" then
+            districts.rotateEquipped(1)
+        elseif key == "left" then
+            districts.rotateEquipped(-1)
         end
     end
 end

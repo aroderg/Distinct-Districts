@@ -12,11 +12,13 @@ function loadGameState()
     gameState.map.resourceWeights = {50, 6, 0.5, 0.5, 0.5}
     gameState.map.minerWeights = {6, 0.5, 0.5, 0.5}
     gameState.resources = {}
-    gameState.resources.red = 4
+    gameState.resources.red = 400
     gameState.resources.orange = 0
     gameState.resources.yellow = 0
     gameState.resources.green = 0
     gameState.placingMiner = false
     gameState.allVisible = false
     gameState.districtExpansion = false
+    gameState.districtNames = {}
+    gameState.districtToExpand = {index = 1, name = "testD"}
 end

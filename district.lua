@@ -14,6 +14,7 @@ function districts.create(name, color)
     newDistrict.occupiedCells = 0
     newDistrict.color = color
     storedDistricts[name] = newDistrict
+    table.insert(gameState.districtNames, newDistrict.name)
     return true
 end
 
@@ -41,4 +42,15 @@ function districts.calculateCells()
         cellsOccupiedByAll = cellsOccupiedByAll + v.occupiedCells
     end
     return cellsOccupiedByAll
+end
+
+function districts.rotateEquipped(dir)
+    gameState.districtToExpand.index = gameState.districtToExpand.index + 1 * dir
+    if gameState.districtToExpand.index == 4 then
+        gameState.districtToExpand.index = 1
+    elseif gameState.districtToExpand.index == 0 then
+        gameState.districtToExpand.index = 3
+    end
+    gameState.districtToExpand.name = gameState.districtNames[gameState.districtToExpand.index]
+    return true
 end
