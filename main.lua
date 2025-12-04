@@ -23,9 +23,9 @@ function love.load()
     fonts.AfacadFluxBold32 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 32)
     fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
     fonts.Vera12 = love.graphics.newFont("fonts/Vera/Vera.ttf", 12)
-    districts.create("Extensia", {0, 1, 0.5, 0.25})
-    districts.create("Growhaven", {0, 1, 1, 0.25})
-    districts.create("Kithajar", {0.5, 0, 1, 0.25})
+    districts.create("Wretarne", {0, 1, 0.5, 0.25})
+    districts.create("Serrutatarn", {0, 1, 1, 0.25})
+    districts.create("Kithajar", {1, 0, 1, 0.25})
     districts.resetEquipped()
     districts.reloadCosts()
 end
@@ -166,7 +166,7 @@ function love.mousepressed(x, y, button)
                     if x >= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) and x <= (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE and y >= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) and y <= (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE then
                         if gameState.placingMiner and not miners.scan({j, i}) and districts.scan({j, i}) and gameState.resources.red >= miners.costs[#cellMiners + 1] then
                             gameState.resources.red = gameState.resources.red - miners.costs[#cellMiners + 1]
-                            local resToAssignToMiner = (w.resource == 0 or w.resource == 1) and lootTable(gameState.map.minerWeights) or w.resource - 1
+                            local resToAssignToMiner = gameState.minerToPlace
                             gameState.map.type[i][j].visible = true
                             miners.create({j, i}, resToAssignToMiner, 1)
                         elseif gameState.districtExpansion and not districts.scan({j, i}) and gameState.resources.red >= districts.costs[districts.calculateCells() + 1] then
@@ -194,10 +194,14 @@ function love.keypressed(key)
         elseif key == "d" then
             gameState.districtExpansion = not gameState.districtExpansion
             gameState.placingMiner = false
-        elseif key == "right" then
+        elseif key == "right" and gameState.districtExpansion then
             districts.rotateEquipped(1)
-        elseif key == "left" then
+        elseif key == "left" and gameState.districtExpansion then
             districts.rotateEquipped(-1)
+        elseif key == "right" and gameState.placingMiner then
+            miners.rotateEquipped(1)
+        elseif key == "left" and gameState.placingMiner then
+            miners.rotateEquipped(-1)
         end
     end
 end

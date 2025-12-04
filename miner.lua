@@ -26,3 +26,13 @@ function miners.scan(coordinates)
     end
     return minerFound
 end
+
+function miners.rotateEquipped(dir)
+    gameState.minerToPlace = gameState.minerToPlace + 1 * dir
+    if gameState.minerToPlace == 5 then
+        gameState.minerToPlace = 1
+    elseif gameState.minerToPlace == 0 then
+        gameState.minerToPlace = 4
+    end
+    return true
+end
