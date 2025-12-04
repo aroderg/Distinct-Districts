@@ -54,3 +54,7 @@ function districts.rotateEquipped(dir)
     gameState.districtToExpand.name = gameState.districtNames[gameState.districtToExpand.index]
     return true
 end
+
+function districts.resetEquipped()
+    gameState.districtToExpand.index, gameState.districtToExpand.name = 1, gameState.districtNames[1]
+end

@@ -23,9 +23,10 @@ function love.load()
     fonts.AfacadFluxBold32 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 32)
     fonts.AfacadFluxBold20 = love.graphics.newFont("fonts/Afacad Flux/AfacadFlux-Bold.ttf", 20)
     fonts.Vera12 = love.graphics.newFont("fonts/Vera/Vera.ttf", 12)
-    districts.create("testD", {0, 1, 0.5, 0.25})
-    districts.create("testD2", {0, 1, 1, 0.25})
-    districts.create("testD3", {0.5, 0, 1, 0.25})
+    districts.create("Extensia", {0, 1, 0.5, 0.25})
+    districts.create("Growhaven", {0, 1, 1, 0.25})
+    districts.create("Kithajar", {0.5, 0, 1, 0.25})
+    districts.resetEquipped()
     districts.reloadCosts()
 end
 
