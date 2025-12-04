@@ -13,11 +13,10 @@ function cellTooltips()
                     love.graphics.rectangle("fill", tooltip.x, tooltip.y, 280, 73)
                     love.graphics.setFont(fonts.Vera12)
                     love.graphics.setColor(0, 0, 0, 1)
-                    love.graphics.printf("Press D to " .. (gameState.districtExpansion and "de" or "") ..
-                    "activate District Expansion.\nPress P to " ..
-                    (gameState.placingMiner and "stop" or "start") ..
-                    " placing Miners.\n" ..
-                    "Press < and > to rotate between Districts.\n" ..
+                    love.graphics.printf(
+                    "District Expansion: " .. (gameState.districtExpansion and "ON" or "OFF") .. "\n" ..
+                    "Placing Miners: " .. (gameState.placingMiner and "ON" or "OFF") .. "\n" ..
+                    "Press < and > to rotate between Districts." .. "\n" ..
                     "Current District: " .. gameState.districtToExpand.name .. "\n" ..
                     "Current Miner: " .. minerNames[gameState.minerToPlace],
                     math.floor(tooltip.x), math.floor(tooltip.y), 280, "center")
