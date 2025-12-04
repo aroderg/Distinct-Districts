@@ -9,14 +9,15 @@ function cellTooltips()
                 if w.resource ~= 0 then
                     local tooltip = {x = (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 0.5) - 140, y = (540 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (i - 1) - CELL_SIZE}
                     love.graphics.setColor(1, 1, 1, 1)
-                    love.graphics.rectangle("fill", tooltip.x, tooltip.y, 280, 50)
+                    love.graphics.rectangle("fill", tooltip.x, tooltip.y, 280, 60)
                     love.graphics.setFont(fonts.Vera12)
                     love.graphics.setColor(0, 0, 0, 1)
                     love.graphics.printf("Press D to " .. (gameState.districtExpansion and "de" or "") ..
                     "activate District Expansion.\nPress P to " ..
                     (gameState.placingMiner and "stop" or "start") ..
                     " placing Miners.\n" ..
-                    gameState.districtToExpand.name,
+                    "Press < and > to rotate between Districts.\n" ..
+                    "Current District: " .. gameState.districtToExpand.name,
                     math.floor(tooltip.x), math.floor(tooltip.y), 280, "center")
                 end
                 --break

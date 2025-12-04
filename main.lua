@@ -32,7 +32,6 @@ end
 function love.draw()
     if gameState.screen == "mapSelection" then
         local mainUIChain = moonshine.chain(moonshine.effects.gaussianblur)
-        mainUIChain.disable("gaussianblur")
         mainUIChain.draw(function()
             love.graphics.setFont(fonts.AfacadFlux60)
             mainUIChain.enable("gaussianblur")
@@ -61,20 +60,24 @@ function love.draw()
         love.graphics.setLineWidth(1)
         love.graphics.setLineStyle("rough")
         local mainUIChain = moonshine.chain(moonshine.effects.gaussianblur)
-        mainUIChain.gaussianblur.sigma = 8
+        mainUIChain.gaussianblur.sigma = 5
         love.graphics.setColor(1, 1, 1, 1)
         local GRID_SIZE = 800
         local CELL_SIZE = GRID_SIZE / math.max(gameState.map.width, gameState.map.height)
-        -- mainUIChain.draw(function()
-        --     for i,v in ipairs(gameState.map) do
-        --         for j,w in ipairs(v) do
-        --         local color = w ~= 0 and cellColors[w] or {1, 1, 1, 0}
-        --         --love.graphics.rectangle("line", 600 + 90 * j, 170 + 90 * i, 90, 90)
-        --         love.graphics.setColor(color)
-        --         love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
-        --         end
-        --     end
-        -- end)
+        mainUIChain.draw(function()
+            for i,v in ipairs(gameState.map.type) do
+                for j,w in ipairs(v) do
+                    local visibilityOverride = w.visible or gameState.allVisible
+                    local cellColor = (w.resource == 0 or w.resource == 1 or not visibilityOverride) and {1, 1, 1, 0} or cellColors[w.resource]
+                    love.graphics.setColor(cellColor)
+                    love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
+                    local borderColor = w.resource == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
+                    love.graphics.setColor(borderColor)
+                    love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
+
+                end
+            end
+        end)
         for i,v in pairs(storedDistricts) do
             for j,w in ipairs(v.cellsOccupied) do
                 local districtColor = v.color or {1, 1, 1, 1}
@@ -90,7 +93,8 @@ function love.draw()
                 love.graphics.rectangle("fill", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1) + CELL_SIZE * 0.35, (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1) + CELL_SIZE * 0.35, CELL_SIZE * 0.3, CELL_SIZE * 0.3)
                 local borderColor = w.resource == 0 and {1, 1, 1, 0} or {1, 1, 1, 1}
                 love.graphics.setColor(borderColor)
-                love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)            end
+                love.graphics.rectangle("line", (960 - CELL_SIZE * gameState.map.width / 2) + CELL_SIZE * (j - 1), (540 - CELL_SIZE * gameState.map.height / 2) + CELL_SIZE * (i - 1), CELL_SIZE, CELL_SIZE)
+            end
         end
         for i,v in ipairs(cellMiners) do
             local minerColor = cellColors[v.resource + 1]
@@ -188,7 +192,6 @@ function love.keypressed(key)
             gameState.districtExpansion = false
         elseif key == "d" then
             gameState.districtExpansion = not gameState.districtExpansion
-            gameState.districtToExpand = gameState.districtExpansion and {name = gameState.districtNames[1], index = 1} or {name = "testD", index = 1}
             gameState.placingMiner = false
         elseif key == "right" then
             districts.rotateEquipped(1)
